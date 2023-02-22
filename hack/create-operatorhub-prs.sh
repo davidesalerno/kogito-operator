@@ -18,7 +18,7 @@ if [[ $1 == v* ]]; then TAG=$1; else TAG=v$1; fi
 GITHUB_AUTHOR=$2
 COMMUNITY_OPERATORS=community-operators
 COMMUNITY_OPERATORS_PROD=community-operators-prod
-if [[ $4 == false ]]; then DRY_RUN=false; else DRY_RUN=true; fi
+if [[ $3 == false ]]; then DRY_RUN=false; else DRY_RUN=true; fi
 
 git remote add upstream https://github.com/kiegroup/kogito-operator.git >/dev/null 2>&1
 git fetch upstream
