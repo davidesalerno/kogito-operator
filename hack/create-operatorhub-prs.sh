@@ -29,6 +29,7 @@ git checkout -B kogito-$TAG $TAG
 cd ../
 
 create_operatorhub_pr() {
+  echo "### Starting changes on $1 repo ####"
   if [ -d "$1" ];
   then
       echo "$1 directory exists."
@@ -47,8 +48,6 @@ create_operatorhub_pr() {
   cd operators/kogito-operator
   mkdir -p ${VERSION}
   cd ${VERSION}
-  pwd
-  ls ../../../../
   cp -rf ../../../../kogito-operator/bundle/app/* .
   cp -f ../../../../kogito-operator/bundle.Dockerfile Dockerfile
   sed -i "s|bundle/app/manifests|manifests|g" Dockerfile
@@ -58,16 +57,17 @@ create_operatorhub_pr() {
   git commit --signoff -m "operator kogito-operator (${TAG})"
   if [[ ${DRY_RUN} == false ]]; then
     echo "We are running in non dry_run mode, going to push changes"
-    #git push -uf
+    git push -uf
     if ! command -v gh &> /dev/null
     then
         echo "gh could not be found, you have to manually open a PR"
     else
       echo "We have found gh, going to open a draft PR"
-      #gh pr create --fill --draft --base main
+      gh pr create --fill --draft --base main
     fi
   fi
   cd ../../../../
+  echo "### Changes on $1 repo finished ####"
 }
 
 create_operatorhub_pr $COMMUNITY_OPERATORS
