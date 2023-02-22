@@ -15,10 +15,9 @@
 
 VERSION=$1
 if [[ $1 == v* ]]; then TAG=$1; else TAG=v$1; fi
-COMMUNITY_OPERATORS_DIR=community-operators
-COMMUNITY_OPERATORS_REPO=$2
-COMMUNITY_OPERATORS_PROD_DIR=community-operators-prod
-COMMUNITY_OPERATORS_PROD_REPO=$3
+GITHUB_AUTHOR=$2
+COMMUNITY_OPERATORS=community-operators
+COMMUNITY_OPERATORS_PROD=community-operators-prod
 if [[ $4 == false ]]; then DRY_RUN=false; else DRY_RUN=true; fi
 
 git fetch --tags --all
@@ -36,29 +35,27 @@ create_operatorhub_pr() {
       git checkout main
       git merge upstream/main
   else
-  	echo "$1 directory does not exist."
-    git clone $2
+    REPO_TO_CLONE="https://github.com/${GITHUB_AUTHOR}/$1"
+  	echo "${REPO_TO_CLONE} directory does not exist."
+    git clone ${REPO_TO_CLONE}
     cd $1
   fi
 
-
-  ls
   git checkout -B kogito-$TAG
   cd operators/kogito-operator
   mkdir -p ${VERSION}
   cd ${VERSION}
-  ls
   cp -rf ../../../../kogito-operator/bundle/app/* .
   cp -f ../../../../kogito-operator/bundle.Dockerfile Dockerfile
   sed -i "s|bundle/app/manifests|manifests|g" Dockerfile
   sed -i "s|bundle/app/metadata|metadata|g" Dockerfile
   sed -i "s|bundle/app/tests|tests|g" Dockerfile
   git add .
-  git commit --signoff -m  "operator kogito-operator (${TAG})"
+  git commit --signoff -m "operator kogito-operator (${TAG})"
   if [[ ${DRY_RUN} == false ]]; then git push -uf; fi
   cd ../../../../
 }
 
-create_operatorhub_pr $COMMUNITY_OPERATORS_DIR $COMMUNITY_OPERATORS_REPO
-create_operatorhub_pr $COMMUNITY_OPERATORS_PROD_DIR $COMMUNITY_OPERATORS_PROD_REPO
+create_operatorhub_pr $COMMUNITY_OPERATORS
+create_operatorhub_pr $COMMUNITY_OPERATORS_PROD
 
