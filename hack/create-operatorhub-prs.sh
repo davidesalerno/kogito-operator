@@ -20,6 +20,7 @@ COMMUNITY_OPERATORS=community-operators
 COMMUNITY_OPERATORS_PROD=community-operators-prod
 if [[ $4 == false ]]; then DRY_RUN=false; else DRY_RUN=true; fi
 
+git remote add upstream git@github.com:kiegroup/kogito-operator.git >/dev/null 2>&1
 git fetch upstream
 git fetch upstream --tags
 echo "Checking out Kogito $TAG"
@@ -37,7 +38,7 @@ create_operatorhub_pr() {
       git merge upstream/main
   else
     REPO_TO_CLONE="https://github.com/${GITHUB_AUTHOR}/$1"
-  	echo "$1 directory does not exist, goint to clone ${REPO_TO_CLONE}"
+  	echo "$1 directory does not exist, going to clone ${REPO_TO_CLONE}"
     git clone ${REPO_TO_CLONE}
     cd $1
   fi
