@@ -47,6 +47,8 @@ create_operatorhub_pr() {
   cd operators/kogito-operator
   mkdir -p ${VERSION}
   cd ${VERSION}
+  pwd
+  ls ../../../../
   cp -rf ../../../../kogito-operator/bundle/app/* .
   cp -f ../../../../kogito-operator/bundle.Dockerfile Dockerfile
   sed -i "s|bundle/app/manifests|manifests|g" Dockerfile
