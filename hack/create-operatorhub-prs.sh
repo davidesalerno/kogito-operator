@@ -56,7 +56,17 @@ create_operatorhub_pr() {
   sed -i "s|bundle/app/tests|tests|g" Dockerfile
   git add .
   git commit --signoff -m "operator kogito-operator (${TAG})"
-  if [[ ${DRY_RUN} == false ]]; then git push -uf; fi
+  if [[ ${DRY_RUN} == false ]]; then
+    echo "We are running in non dry_run mode, going to push changes"
+    #git push -uf
+    if ! command -v gh &> /dev/null
+    then
+        echo "gh could not be found, you have to manually open a PR"
+    else
+      echo "We have found gh, going to open a draft PR"
+      #gh pr create --fill --draft --base main
+    fi
+  fi
   cd ../../../../
 }
 
