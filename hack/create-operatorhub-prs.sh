@@ -20,9 +20,10 @@ COMMUNITY_OPERATORS=community-operators
 COMMUNITY_OPERATORS_PROD=community-operators-prod
 if [[ $4 == false ]]; then DRY_RUN=false; else DRY_RUN=true; fi
 
-git fetch --tags --all
+git fetch upstream
+git fetch upstream --tags
 echo "Checking out Kogito $TAG"
-git checkout tags/$TAG -B kogito-$TAG
+git checkout -B kogito-$TAG $TAG
 
 cd ../
 
@@ -36,7 +37,7 @@ create_operatorhub_pr() {
       git merge upstream/main
   else
     REPO_TO_CLONE="https://github.com/${GITHUB_AUTHOR}/$1"
-  	echo "${REPO_TO_CLONE} directory does not exist."
+  	echo "$1 directory does not exist, goint to clone ${REPO_TO_CLONE}"
     git clone ${REPO_TO_CLONE}
     cd $1
   fi
